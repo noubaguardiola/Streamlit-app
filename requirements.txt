@@ -1,0 +1,6 @@
+streamlit
+exif
+Pillow
+geocoder
+folium
+streamlit-folium
