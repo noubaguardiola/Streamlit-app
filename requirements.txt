@@ -4,4 +4,3 @@ Pillow
 geocoder
 folium
 streamlit-folium
-fractions
