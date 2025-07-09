@@ -50,32 +50,28 @@ if submit:
     exif_img.model = modele
     exif_img.datetime_original = date
 
-    # nouvelle version de l’image avec les métadonnées modifiées
-    new_bytes = exif_img.get_file()
+    try:
+        # nouvelle version de l’image avec les métadonnées modifiées
+        new_bytes = exif_img.get_file()
 
+        # Message de succès
+        st.success("Nouvelles métadonnées sauvegardées")
 
+        # Télécharger via bouton
+        st.download_button(
+            label="Télécharger l'image modifiée",
+            data=new_bytes,
+            file_name="image_modifiee.jpg",
+            mime="image/jpeg"
+        )
 
-# Enregistrement de la nouvelle image localement
-nouveau_fichier = "image_updated.jpg"
+        # Enregistrer localement (optionnel sur Streamlit Cloud)
+        nouveau_fichier = "image_updated.jpg"
+        with open(nouveau_fichier, "wb") as f:
+            f.write(new_bytes)
 
-try:
-    # Enregistre l'image avec les métadonnées modifiées
-    with open(nouveau_fichier, "wb") as f:
-        f.write(exif_img.get_file())
-
-    st.success("Nouvelles métadonnées sauvegardées")
-
-    # Bouton de téléchargement
-    st.download_button(
-        "Télécharger l'image modifiée",
-        data=exif_img.get_file(),
-        file_name=nouveau_fichier,
-        mime="image/jpeg"
-    )
-
-except Exception as e:
-    st.error(f"Erreur lors de la sauvegarde de l'image: {e}")
-
+    except Exception as e:
+        st.error(f"Erreur lors de la génération de l'image modifiée: {e}")
 
 
   # affichage des coordonnées GPS sur une carte
