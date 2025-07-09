@@ -162,7 +162,7 @@ for city, coord in locations.items():
     folium.Marker(coord, popup=city).add_to(m2)
 folium.PolyLine(list(locations.values()), color="purple").add_to(m2) #lier les lieux entre eux
 
-_ = st_folium(m, width=700, height=500) #affichage de la carte
+st_folium(m2, width=700) #affichage de la carte
 
 
 
