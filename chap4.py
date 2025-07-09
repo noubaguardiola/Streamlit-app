@@ -16,7 +16,7 @@ from streamlit_folium import st_folium #carte dans streamlit
 
 
 # Charge l’image depuis un fichier local
-file_path = "mnemosyne.jpg"
+file_path = "cows.jpeg"
 with open(file_path, "rb") as image_file:
     image_bytes = image_file.read()
     exif_img = ExifImage(image_bytes) # Lire les métadonnées exif de l’image avec exif
