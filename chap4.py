@@ -96,7 +96,8 @@ if exif_img.has_exif and exif_img.gps_latitude and exif_img.gps_longitude: # app
     st.markdown("### Localisation GPS sur la carte")
     m = folium.Map(location=[latitude, longitude], zoom_start=12)
     folium.Marker([latitude, longitude], popup="Position EXIF de l'image").add_to(m)
-    st_folium(m, width=700)
+    _ = st_folium(m, width=700, height=500)
+
 
 else:
     st.warning("Aucune coordonnée GPS trouvée dans cette image.")
@@ -161,7 +162,7 @@ for city, coord in locations.items():
     folium.Marker(coord, popup=city).add_to(m2)
 folium.PolyLine(list(locations.values()), color="purple").add_to(m2) #lier les lieux entre eux
 
-st_folium(m2, width=700) #affichage de la carte
+_ = st_folium(m, width=700, height=500) #affichage de la carte
 
 
 
