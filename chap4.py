@@ -101,6 +101,20 @@ else:
 
 
 # remplacer la position actuelle via l'adresse IP
+
+# convertir un float GPS en format DMS rationnel
+def decimal_to_dms_rational(decimal):
+    degrees = int(abs(decimal))
+    minutes_float = (abs(decimal) - degrees) * 60
+    minutes = int(minutes_float)
+    seconds = round((minutes_float - minutes) * 60)
+
+    return [
+        (degrees, 1),
+        (minutes, 1),
+        (seconds, 1)
+    ]
+
 #Donner plus de controle a l'utilisateur en le laissant cliquer un bouton
 if st.button("Remplacer les coordonnées GPS par ma position actuelle"): 
     g = geocoder.ip('me')
