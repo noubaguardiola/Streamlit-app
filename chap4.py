@@ -13,6 +13,8 @@ from PIL.ExifTags import TAGS, GPSTAGS #metadata
 import geocoder #recupere la position actuelle via l'adresse IP
 import folium #carte
 from streamlit_folium import st_folium #carte dans streamlit
+from fractions import Fraction
+
 
 
 st.header("Bienvenue sur cette app Streamlit") #ajout d'un titre pour structurer la page
@@ -102,32 +104,44 @@ else:
 
 # remplacer la position actuelle via l'adresse IP
 
-# convertir un float GPS en format DMS rationnel
+# Fonction : convertir un float en rationnel (x, 1)
+def to_rational(number):
+    return (Fraction(str(number)).limit_denominator().numerator,
+            Fraction(str(number)).limit_denominator().denominator)
+
+# Fonction : convertir coordonnées décimales en format DMS pour EXIF
 def decimal_to_dms_rational(decimal):
-    degrees = int(abs(decimal))
-    minutes_float = (abs(decimal) - degrees) * 60
+    decimal = abs(decimal)
+    degrees = int(decimal)
+    minutes_float = (decimal - degrees) * 60
     minutes = int(minutes_float)
-    seconds = round((minutes_float - minutes) * 60)
+    seconds = round((minutes_float - minutes) * 60, 2)
 
     return [
-        (degrees, 1),
-        (minutes, 1),
-        (seconds, 1)
+        to_rational(degrees),
+        to_rational(minutes),
+        to_rational(seconds)
     ]
 
 #Donner plus de controle a l'utilisateur en le laissant cliquer un bouton
-if st.button("Remplacer les coordonnées GPS par ma position actuelle"): 
+if st.button("Remplacer les coordonnées GPS par ma position actuelle"):
     g = geocoder.ip('me')
     if g.ok:
         lat, lon = g.latlng
-        #conversion du format décimal en DMS
-        exif_img.gps_latitude = [int(lat), int((lat % 1) * 60), int(((lat * 60) % 1) * 60)]
-        exif_img.gps_latitude_ref = 'N' if lat >= 0 else 'S'
-        exif_img.gps_longitude = [int(lon), int((lon % 1) * 60), int(((lon * 60) % 1) * 60)]
-        exif_img.gps_longitude_ref = 'E' if lon >= 0 else 'W'
-        st.success("Coordonnées GPS mises à jour avec votre emplacement actuel.")
+
+        try:
+            exif_img.gps_latitude = decimal_to_dms_rational(lat)
+            exif_img.gps_latitude_ref = "N" if lat >= 0 else "S"
+
+            exif_img.gps_longitude = decimal_to_dms_rational(lon)
+            exif_img.gps_longitude_ref = "E" if lon >= 0 else "W"
+
+            st.success(f"Coordonnées GPS mises à jour avec ta position actuelle :\n\nLatitude: {lat}, Longitude: {lon}")
+
+        except Exception as e:
+            st.error(f"Erreur lors de l'écriture des coordonnées GPS dans l'image : {e}")
     else:
-        st.error("Impossible de déterminer votre position.")
+        st.error("Impossible de déterminer votre position actuelle.")
 
 
 #lieux visités
