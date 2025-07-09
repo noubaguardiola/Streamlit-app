@@ -15,6 +15,9 @@ import folium #carte
 from streamlit_folium import st_folium #carte dans streamlit
 
 
+st.header("Bienvenue sur cette app Streamlit") #ajout d'un titre pour structurer la page
+
+
 # Charge l’image depuis un fichier local
 file_path = "cows.jpeg"
 
@@ -50,16 +53,29 @@ if submit:
     # nouvelle version de l’image avec les métadonnées modifiées
     new_bytes = exif_img.get_file()
 
-    #enregistrement de la nouvelle image localement
-    nouveau_fichier = "image_updated.jpg"
+
+
+# Enregistrement de la nouvelle image localement
+nouveau_fichier = "image_updated.jpg"
+
+try:
+    # Enregistre l'image avec les métadonnées modifiées
     with open(nouveau_fichier, "wb") as f:
         f.write(exif_img.get_file())
 
+    st.success("Nouvelles métadonnées sauvegardées")
 
-#retour d'information et affichage du succès de l'opération pour l'utilisateur
-st.success("Nouvelles métadonnées sauvegardées")
-#envoi et sauvegarde du fichier sous un nouveau nom
-st.download_button("Télécharger l'image modifiée", data=exif_img.get_file(), file_name=nouveau_fichier, mime="image/jpeg")
+    # Bouton de téléchargement
+    st.download_button(
+        "Télécharger l'image modifiée",
+        data=exif_img.get_file(),
+        file_name=nouveau_fichier,
+        mime="image/jpeg"
+    )
+
+except Exception as e:
+    st.error(f"Erreur lors de la sauvegarde de l'image: {e}")
+
 
 
   # affichage des coordonnées GPS sur une carte
