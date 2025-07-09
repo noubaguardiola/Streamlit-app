@@ -20,7 +20,7 @@ file_path = "cows.jpeg"
 
 try:
     with open(file_path, "rb") as img_file:
-        image_bytes = image_file.read()
+        image_bytes = img_file.read()
         st.image(image_bytes, caption="Image : cows.jpeg", width=400) # Afficher l’image
         exif_img = ExifImage(image_bytes) # Lire les métadonnées exif de l’image avec exif
 
